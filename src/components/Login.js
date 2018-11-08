@@ -1,21 +1,42 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import './Login.css'
 
 const FormItem = Form.Item;
 
 class Login extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            redirectToReferrer: false // 是否重定向到之前的页面
+        }
+    }
+    
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if(!err) {
                 console.log('Received values of form: ', values);
+                sessionStorage.setItem('token', '111');
+                sessionStorage.setItem('username', values.username);
+                this.setState({
+                    redirectToReferrer: true
+                })
             }
         });
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { redirectToReferrer } = this.state;
+
+        // 登录成功后，redirectToReferrer设置为true，使用Redirect实现页面挑战
+        if (redirectToReferrer) {
+            return <Redirect to={{pathname: "/home",}} />
+        }
+
         return (
             <Form onSubmit={this.handleSubmit} className='login-form'>
                 <FormItem>

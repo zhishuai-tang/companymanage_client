@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
 import AppHeader from './AppHeader';
-import AppContent from './AppContent';
 import AppFooter from './AppFooter';
 
 
@@ -26,7 +25,7 @@ class Home extends Component {
         return (
             <Layout>
                 <AppHeader />
-                <AppContent />
+                {this.props.children}
                 <AppFooter />
             </Layout>
         );

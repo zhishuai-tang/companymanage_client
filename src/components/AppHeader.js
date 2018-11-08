@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './AppHeader.css';
 import SubMenu from 'antd/lib/menu/SubMenu';
 
@@ -21,7 +21,7 @@ class AppHeader extends Component {
                     <Menu.Item key='1'>首页</Menu.Item>
                     <SubMenu title='系统管理'>
                         <Menu.Item key='2'>部门管理</Menu.Item>
-                        <Menu.Item key='3'>员工管理</Menu.Item>
+                        <Menu.Item key='3'><Link to='/sys/userMana'>员工管理</Link></Menu.Item>
                     </SubMenu>
                     <SubMenu title='考勤管理'>
                         <Menu.Item key='3'>考勤录入</Menu.Item>
