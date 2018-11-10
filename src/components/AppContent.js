@@ -1,55 +1,44 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import { Layout, Breadcrumb } from 'antd';
 
 const { Content } = Layout;
 
-class AppContent extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            breadcrumb: props.breadcrumb
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.breadcrumb !== nextProps.breadcrumb ) {
-            this.setState({
-                breadcrumb: nextProps.breadcrumb
-            })
-        }
-    }
-
-    renderBreadcrumb = (data) => {
-        return data.map((item) => {
-            if (item.path && item.path.length > 0) {
-                return (
-                    <Breadcrumb.item><Link to={item.path}>{item.name}</Link></Breadcrumb.item>
-                );
-            } else {
-                return (
-                    <Breadcrumb.item>{item.name}</Breadcrumb.item>
-                );
-            }
-        });
-    }
+const AppContent = withRouter((props) => {
+    const { location } = props;
+    const pathSnippets = location.pathname.split('/').filter(i => i);
+    const breadcrumbNameMap = JSON.parse(sessionStorage.getItem("breadcrumbNameMap"));
     
-    render() {
-        return (
-            <Content style={{padding: '0 5px'}}>
-                <Breadcrumb style={{margin: '16px 0'}}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                    {this.renderBreadcrumb(this.state.breadcrumb)}
-                </Breadcrumb>
-                <div style={{background: '#fff', padding: 24, minHeight: 280}}>
-                    {this.props.children}
-                </div>
-            </Content>
-        );
-    }
-}
+    const breadcrumbItems = pathSnippets.map((_, index) => {
+            const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+            const breadInfo = breadcrumbNameMap[url];
+            return (
+                <Breadcrumb.Item key={url}>
+                    {breadInfo.isParent ? (
+                        <span>{breadInfo.title}</span>
+                    ):(
+                        <Link to={url}>
+                            {breadInfo.title}
+                        </Link>
+                    )}
+                    
+                    
+                </Breadcrumb.Item>
+            );
+        });
+
+
+    return (
+        <Content style={{padding: '0 5px'}}>
+            <Breadcrumb style={{margin: '16px 0'}}>
+                {breadcrumbItems}
+            </Breadcrumb>
+            <div style={{background: '#fff', padding: 24, minHeight: 280}}>
+                {props.children}
+            </div>
+        </Content>
+    );
+}); 
+
 
 export default AppContent;

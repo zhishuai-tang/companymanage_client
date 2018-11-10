@@ -7,6 +7,45 @@ import SubMenu from 'antd/lib/menu/SubMenu';
 const { Header } = Layout;
 
 class AppHeader extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            username: sessionStorage.getItem("username"),
+            menu: this.renderMenu(JSON.parse(sessionStorage.getItem("naviData")))
+        };
+
+        this.breadcrumbNameMap(JSON.parse(sessionStorage.getItem("naviData")));
+    }
+
+    breadcrumbNameMap = (data) => {
+        let bread = {};
+        data.forEach(item => {
+            bread[item.path] = {title: item.title, isParent: item.hasChildren};
+        }); 
+        sessionStorage.setItem("breadcrumbNameMap", JSON.stringify(bread));
+    }
+
+    // 组装菜单
+    renderMenu = (data, parentId) => {
+        return data.map(item => {
+            // 如果是儿子，但不是当前父亲的儿子则返回
+            if(item.parentId && (item.parentId!==parentId)) {
+                return;
+            }
+            if (item.hasChildren) {
+                return (
+                    <SubMenu title={item.title} key={item.id} >
+                        {this.renderMenu(data.filter(i => {
+                            return i.parentId; // 组装当前父亲的儿子
+                            }), item.id
+                        )}
+                    </SubMenu>
+                );
+            }
+            return (<Menu.Item key={item.id}><Link to={item.path}>{item.title}</Link></Menu.Item>);
+        })
+    }
 
     render() {
         return (
@@ -18,16 +57,8 @@ class AppHeader extends Component {
                     defaultSelectedKeys={['1']}
                     style={{lineHeight: '64px'}}
                 >
-                    <Menu.Item key='1'>首页</Menu.Item>
-                    <SubMenu title='系统管理'>
-                        <Menu.Item key='2'>部门管理</Menu.Item>
-                        <Menu.Item key='3'><Link to='/sys/userMana'>员工管理</Link></Menu.Item>
-                    </SubMenu>
-                    <SubMenu title='考勤管理'>
-                        <Menu.Item key='3'>考勤录入</Menu.Item>
-                        <Menu.Item key='4'>考勤查询</Menu.Item>
-                    </SubMenu>
-                    <SubMenu style={{float: 'right', marginRight: '-30px'}} title={<span><Icon type='user' />zhishuai-tang</span>}>
+                    {this.state.menu}
+                    <SubMenu style={{float: 'right', marginRight: '-30px'}} title={<span><Icon type='user' />{this.state.username}</span>}>
                         <Menu.Item key='setting:1'>退出</Menu.Item>
                     </SubMenu>
                 </Menu>

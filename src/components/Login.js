@@ -10,7 +10,7 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            redirectToReferrer: false // 是否重定向到之前的页面
+            redirectToReferrer: false, // 是否重定向到之前的页面
         }
     }
     
@@ -21,8 +21,19 @@ class Login extends Component {
                 console.log('Received values of form: ', values);
                 sessionStorage.setItem('token', '111');
                 sessionStorage.setItem('username', values.username);
+                const naviData = [
+                    {id: '1', path: '/home', title: '首页', hasChildren: false},
+                    {id: '2', path: '/sys', title: '系统管理', hasChildren: true},
+                        {id: '3', path: '/sys/orgMana', title: '部门管理', parentId: '2', hasChildren: true},
+                            {id: '8', path: '/sys/test', title: 'test', parentId: '3', hasChildren: false},
+                        {id: '4', path: '/sys/userMana', title: '员工管理', parentId: '2', hasChildren: false},
+                    {id: '5', path: '/attendance', title: '考勤管理', hasChildren: true},
+                        {id: '6', path: '/attendance/entry', title: '考勤录入', parentId: '5', hasChildren: false},
+                        {id: '7', path: '/attendance/query', title: '考勤查询', parentId: '5', hasChildren: false}
+                ];
+                sessionStorage.setItem('naviData', JSON.stringify(naviData));
                 this.setState({
-                    redirectToReferrer: true
+                    redirectToReferrer: true,
                 })
             }
         });
@@ -31,10 +42,9 @@ class Login extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const { redirectToReferrer } = this.state;
-
         // 登录成功后，redirectToReferrer设置为true，使用Redirect实现页面挑战
         if (redirectToReferrer) {
-            return <Redirect to={{pathname: "/home",}} />
+            return <Redirect to={{pathname: "/home", state: {bread: [{pathname: '/home', title: '首页'}]}}} />
         }
 
         return (

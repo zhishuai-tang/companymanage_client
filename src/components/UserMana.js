@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class UserList extends Component {
+class UserMana extends Component {
     render() {
         return (
             <span>userlist</span>
@@ -8,4 +8,4 @@ class UserList extends Component {
     }
 }
 
-export default UserList;
+export default UserMana;

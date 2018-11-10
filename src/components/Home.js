@@ -14,10 +14,10 @@ class Home extends Component {
             username: sessionStorage.getItem('username'),
         }
     }
-
+    
     render() {
         const { token, username } = this.state;
-
+        
         if (!token || !username) {
             return <Redirect to={{pathname: '/login'}} />
         }
