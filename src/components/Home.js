@@ -14,6 +14,14 @@ class Home extends Component {
             username: sessionStorage.getItem('username'),
         }
     }
+
+    logout = () => {
+        this.setState({
+            token: null,
+            username: null
+        });
+        sessionStorage.clear();
+    }
     
     render() {
         const { token, username } = this.state;
@@ -24,7 +32,7 @@ class Home extends Component {
 
         return (
             <Layout>
-                <AppHeader />
+                <AppHeader onLogout={this.logout}/>
                 {this.props.children}
                 <AppFooter />
             </Layout>

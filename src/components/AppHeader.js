@@ -47,6 +47,15 @@ class AppHeader extends Component {
         })
     }
 
+    handleLogout = () => {
+        this.setState({
+            username: null,
+            menu: []
+        });
+        this.props.onLogout();
+    }
+
+
     render() {
         return (
             <Header>
@@ -59,7 +68,7 @@ class AppHeader extends Component {
                 >
                     {this.state.menu}
                     <SubMenu style={{float: 'right', marginRight: '-30px'}} title={<span><Icon type='user' />{this.state.username}</span>}>
-                        <Menu.Item key='setting:1'>退出</Menu.Item>
+                        <Menu.Item key='setting:1' onClick={this.handleLogout}>退出</Menu.Item>
                     </SubMenu>
                 </Menu>
             </Header>
