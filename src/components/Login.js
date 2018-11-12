@@ -15,9 +15,9 @@ class Login extends Component {
     }
     
     handleSubmit = (e) => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if(!err) {
+        e.preventDefault(); // 阻止表单默认行为
+        this.props.form.validateFields((err, values) => { // 校验表达数据
+            if(!err) { // 没有错误，校验通过
                 console.log('Received values of form: ', values);
                 sessionStorage.setItem('token', '111');
                 sessionStorage.setItem('username', values.username);
@@ -33,7 +33,7 @@ class Login extends Component {
                 ];
                 sessionStorage.setItem('naviData', JSON.stringify(naviData));
                 this.setState({
-                    redirectToReferrer: true,
+                    redirectToReferrer: true, // 登录成功后，设置跳转标志位，跳转到首页
                 })
             }
         });
@@ -44,7 +44,7 @@ class Login extends Component {
         const { redirectToReferrer } = this.state;
         // 登录成功后，redirectToReferrer设置为true，使用Redirect实现页面挑战
         if (redirectToReferrer) {
-            return <Redirect to={{pathname: "/home", state: {bread: [{pathname: '/home', title: '首页'}]}}} />
+            return <Redirect to={{pathname: "/home"}} />
         }
 
         return (

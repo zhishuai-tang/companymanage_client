@@ -18,6 +18,7 @@ class AppHeader extends Component {
         this.breadcrumbNameMap(JSON.parse(sessionStorage.getItem("naviData")));
     }
 
+    // 组装面包屑映射
     breadcrumbNameMap = (data) => {
         let bread = {};
         data.forEach(item => {
@@ -29,15 +30,15 @@ class AppHeader extends Component {
     // 组装菜单
     renderMenu = (data, parentId) => {
         return data.map(item => {
-            // 如果是儿子，但不是当前父亲的儿子则返回
+            // 如果是儿子，但不是当前父亲的儿子则直接返回
             if(item.parentId && (item.parentId!==parentId)) {
                 return;
             }
-            if (item.hasChildren) {
+            if (item.hasChildren) { // 如果有儿子则组装儿子
                 return (
                     <SubMenu title={item.title} key={item.id} >
                         {this.renderMenu(data.filter(i => {
-                            return i.parentId; // 组装当前父亲的儿子
+                            return i.parentId; // 筛选儿子列表
                             }), item.id
                         )}
                     </SubMenu>
@@ -66,6 +67,7 @@ class AppHeader extends Component {
                     defaultSelectedKeys={['1']}
                     style={{lineHeight: '64px'}}
                 >
+                    {/* 动态获取菜单 */}
                     {this.state.menu}
                     <SubMenu style={{float: 'right', marginRight: '-30px'}} title={<span><Icon type='user' />{this.state.username}</span>}>
                         <Menu.Item key='setting:1' onClick={this.handleLogout}>退出</Menu.Item>
